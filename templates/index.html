@@ -1,0 +1,136 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Basic Mathematical Application</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 40px;
+            background-color: #fafafa;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            padding: 30px 40px 40px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+
+        .buttons {
+            margin-top: 10px;
+        }
+
+        .buttons button {
+            padding: 8px 16px;
+            margin-right: 8px;
+            border: 1px solid #777;
+            border-radius: 3px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+
+        .buttons button:hover {
+            background-color: #e0e0e0;
+        }
+
+        #result-box {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+        }
+
+        #result {
+            margin-top: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .error {
+            color: #c00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Basic Mathematical Application</h1>
+
+        <div class="form-group">
+            <label for="num1">Number 1</label>
+            <input type="text" id="num1" name="num1" />
+        </div>
+
+        <div class="form-group">
+            <label for="num2">Number 2</label>
+            <input type="text" id="num2" name="num2" />
+        </div>
+
+        <div class="buttons">
+            <button type="button" onclick="sendRequest('sum')">Add</button>
+            <button type="button" onclick="sendRequest('sub')">Subtract</button>
+            <button type="button" onclick="sendRequest('mul')">Multiply</button>
+        </div>
+
+        <div id="result-box">
+            <h2>The answer is</h2>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        function sendRequest(operation) {
+            const num1 = document.getElementById('num1').value.trim();
+            const num2 = document.getElementById('num2').value.trim();
+            const resultDiv = document.getElementById('result');
+
+            // basic validation
+            if (num1 === '' || num2 === '') {
+                resultDiv.textContent = 'Please enter both numbers.';
+                resultDiv.className = 'error';
+                return;
+            }
+
+            const url = `/${operation}?num1=${encodeURIComponent(num1)}&num2=${encodeURIComponent(num2)}`;
+
+            fetch(url)
+                .then(response => response.text())
+                .then(text => {
+                    resultDiv.textContent = text;
+                    resultDiv.className = '';
+                })
+                .catch(err => {
+                    console.error(err);
+                    resultDiv.textContent = 'Error contacting server.';
+                    resultDiv.className = 'error';
+                });
+        }
+    </script>
+</body>
+</html>
